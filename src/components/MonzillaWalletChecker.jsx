@@ -108,13 +108,28 @@ export default function MonzillaWalletChecker() {
     .top-socials { position: fixed; top: 14px; right: 16px; display:flex; gap:12px; z-index:60 }
     .social-icon { width:36px; height:36px; cursor:pointer; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.12)); }
     .logo-zone { display:flex; justify-content:center; margin-bottom:16px; }
-    .checker-card { max-width:1100px; margin: 0 auto; background:#f6f5f7; border-radius:18px; padding:30px 25px; border:8px solid #7a40d7; box-shadow:0 10px 0 rgba(0,0,0,0.06); position:relative }
+    .checker-card {
+  width: 100%;
+  max-width: 1100px;
+
+  /* perfect centering for all devices */
+  margin: 5px auto;      /* already centers horizontally */
+  margin-left: auto;     /* EXTRA FIX for mobile */
+  margin-right: auto;    /* EXTRA FIX for mobile */
+
+  background: #f6f5f7;
+  border-radius: 45px;
+  padding: 30px 25px;
+  border: 10px solid #7a40d7;
+  box-shadow: 0 10px 0 rgba(0,0,0,0.06);
+  position: relative;
+}
     .checker-title{ text-align:center; font-size:36px; color:#2b0b5a; margin: 6px 0 18px; text-transform:uppercase }
     .input-wrap { position:relative; margin-top:20px; }
     .input-label { display:block; font-weight:700; color:#3b3b3b; margin-bottom:6px }
     .input-row { position:relative; }
     .wallet-input { width:100%; padding:16px 18px; border-radius:12px; border:3px solid #cdb9ff; font-size:18px; box-sizing:border-box }
-    .zilla-head-inline { position:absolute; left:140px; top:-53px; width:120px; z-index:30; pointer-events:none; }
+    .zilla-head-inline { position:absolute; left:200px; top:-53px; width:120px; z-index:30; pointer-events:none; }
     .check-btn{ display:inline-block; min-width:300px; padding:14px 22px; border-radius:28px; background:linear-gradient(90deg,#7a40d7,#c95eb7); font-size:20px; font-weight:800; color:#fff; border:3px solid rgba(0,0,0,0.08); box-shadow:0 8px 0 rgba(0,0,0,0.09); cursor:pointer; transition:0.15s }
     .check-btn:hover{ transform:scale(1.04) }
     .check-btn:active{ transform:scale(0.98) }
@@ -136,19 +151,19 @@ export default function MonzillaWalletChecker() {
   return (
     <>
       <style>{`body { margin:0; padding:0; background:#000; } html, body, #root { height:100%; width:100%; overflow-x:hidden; }`}</style>
-      <div
-        className="mon-container"
-        style={{
-          width: "100%",
-          overflowX: "hidden",
-          minHeight: "100vh",
-          backgroundImage: "url('/bg-monzilla.png')",
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "cover",
-          backgroundPosition: "center center",
-          padding: "36px 18px 60px",
-        }}
-      >
+     <div
+  className="mon-container"
+  style={{
+    width: "100%",
+    overflowX: "hidden",
+    minHeight: "100vh",
+    backgroundImage: "url('/bg-monzilla.png')",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "cover",
+    backgroundPosition: "center center",
+    padding: "36px 18px 60px",
+  }}
+>
         <style>{css}</style>
 
         <div className="top-socials">
