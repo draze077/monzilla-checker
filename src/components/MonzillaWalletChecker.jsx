@@ -7,30 +7,31 @@ export default function MonzillaWalletChecker() {
   const [loading, setLoading] = useState(false);
   const [csvData, setCsvData] = useState({ freemint: {}, gtd: {}, fcfs: {} });
 
-  // 🔧 FIXED CSV PARSER
+  // 🔧 FIXED CSV PARSER (NOW HANDLES TRIM + SPACES PROPERLY)
   const parseCsvRows = (rows) => {
     const out = {};
 
     (rows || []).forEach((r) => {
       if (!r) return;
 
-      // detect wallet column
-      const walletKey = Object.keys(r).find((k) =>
+      // normalize all keys (TRIM + LOWERCASE)
+      const normalized = {};
+      Object.keys(r).forEach((key) => {
+        normalized[key.trim().toLowerCase()] = r[key];
+      });
+
+      // detect wallet
+      const walletKey = Object.keys(normalized).find((k) =>
         [
           "wallet",
           "address",
-          "evm",
-          "Wallet Address",
-          "Wallet",
-          "EVM",
-          "Address",
-        ]
-          .map((x) => x.toLowerCase())
-          .includes(k.toLowerCase())
+          "wallet address",
+          "evm"
+        ].includes(k)
       );
 
-      // detect quantity column
-      const qtyKey = Object.keys(r).find((k) =>
+      // detect quantity
+      const qtyKey = Object.keys(normalized).find((k) =>
         [
           "eligible",
           "amount",
@@ -38,15 +39,16 @@ export default function MonzillaWalletChecker() {
           "quantity",
           "value",
           "count",
-          "Count",
-          "HowMany",
-        ]
-          .map((x) => x.toLowerCase())
-          .includes(k.toLowerCase())
+          "howmany"
+        ].includes(k)
       );
 
-      const key = (r[walletKey] || "").toString().trim().toLowerCase();
-      const qty = Number(r[qtyKey] || 0);
+      const key = (normalized[walletKey] || "")
+        .toString()
+        .trim()
+        .toLowerCase();
+
+      const qty = Number(normalized[qtyKey] || 0);
 
       if (key) out[key] = qty;
     });
@@ -118,19 +120,17 @@ export default function MonzillaWalletChecker() {
     .check-btn:active{ transform:scale(0.98) }
     .result-msg{ margin-top:18px; text-align:center; min-height:48px }
     .result-pill{
-  display:inline-block;
-  background: linear-gradient(90deg,#7a40d7,#c95eb7);
-  padding:10px 14px;
-  border-radius:12px;
-  font-weight:700;
-  color:white;
-  box-shadow:0 4px 10px rgba(0,0,0,0.25);
-}
+      display:inline-block;
+      background: linear-gradient(90deg,#7a40d7,#c95eb7);
+      padding:10px 14px;
+      border-radius:12px;
+      font-weight:700;
+      color:white;
+      box-shadow:0 4px 10px rgba(0,0,0,0.25);
+    }
     .bottom-graphics{ position:relative; height:140px; margin-top:22px }
     .baby-left{ position:absolute; left:8px; bottom:0; width:160px }
     .baby-right{ position:absolute; right:8px; bottom:0; width:160px }
-    @media (max-width:1024px){ .checker-card{ padding:26px; } .checker-title{ font-size:32px } }
-    @media (max-width:720px){ .checker-card{ margin: 25px; padding:18px } .checker-title{ font-size:26px } .zilla-head-inline{ width:90px; left:185px !important; top:-34px } .check-btn{ min-width:240px; font-size:16px } .baby-left, .baby-right{ width:120px } } .checker-title{ font-size:26px } .zilla-head-inline{ width:90px; left:260px; top:-33px } top:-33px } .check-btn{ min-width:240px; font-size:16px } .baby-left, .baby-right{ width:150px } }
   `;
 
   return (
