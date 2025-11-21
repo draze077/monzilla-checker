@@ -117,7 +117,15 @@ export default function MonzillaWalletChecker() {
     .check-btn:hover{ transform:scale(1.04) }
     .check-btn:active{ transform:scale(0.98) }
     .result-msg{ margin-top:18px; text-align:center; min-height:48px }
-    .result-pill{ display:inline-block; background: rgba(122,64,215,0.08); padding:10px 14px; border-radius:10px; font-weight:700 }
+    .result-pill{
+  display:inline-block;
+  background: linear-gradient(90deg,#7a40d7,#c95eb7);
+  padding:10px 14px;
+  border-radius:12px;
+  font-weight:700;
+  color:white;
+  box-shadow:0 4px 10px rgba(0,0,0,0.25);
+}
     .bottom-graphics{ position:relative; height:140px; margin-top:22px }
     .baby-left{ position:absolute; left:8px; bottom:0; width:160px }
     .baby-right{ position:absolute; right:8px; bottom:0; width:160px }
