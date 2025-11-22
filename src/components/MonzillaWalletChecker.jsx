@@ -7,40 +7,23 @@ export default function MonzillaWalletChecker() {
   const [loading, setLoading] = useState(false);
   const [csvData, setCsvData] = useState({ freemint: {}, gtd: {}, fcfs: {} });
 
-  // 🔧 FIXED CSV PARSER (NOW HANDLES TRIM + SPACES PROPERLY)
   const parseCsvRows = (rows) => {
     const out = {};
 
     (rows || []).forEach((r) => {
       if (!r) return;
 
-      // normalize all keys (TRIM + LOWERCASE)
       const normalized = {};
       Object.keys(r).forEach((key) => {
         normalized[key.trim().toLowerCase()] = r[key];
       });
 
-      // detect wallet
       const walletKey = Object.keys(normalized).find((k) =>
-        [
-          "wallet",
-          "address",
-          "wallet address",
-          "evm"
-        ].includes(k)
+        ["wallet", "address", "wallet address", "evm"].includes(k)
       );
 
-      // detect quantity
       const qtyKey = Object.keys(normalized).find((k) =>
-        [
-          "eligible",
-          "amount",
-          "qty",
-          "quantity",
-          "value",
-          "count",
-          "howmany"
-        ].includes(k)
+        ["eligible", "amount", "qty", "quantity", "value", "count", "howmany"].includes(k)
       );
 
       const key = (normalized[walletKey] || "")
@@ -88,8 +71,7 @@ export default function MonzillaWalletChecker() {
 
     setTimeout(() => {
       const parts = [];
-      if (csvData.freemint[w])
-        parts.push(`${csvData.freemint[w]}x FREEMINT`);
+      if (csvData.freemint[w]) parts.push(`${csvData.freemint[w]}x FREEMINT`);
       if (csvData.gtd[w]) parts.push(`${csvData.gtd[w]}x GTD`);
       if (csvData.fcfs[w]) parts.push(`${csvData.fcfs[w]}x FCFS`);
 
@@ -108,31 +90,61 @@ export default function MonzillaWalletChecker() {
     .top-socials { position: fixed; top: 14px; right: 16px; display:flex; gap:12px; z-index:60 }
     .social-icon { width:36px; height:36px; cursor:pointer; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.12)); }
     .logo-zone { display:flex; justify-content:center; margin-bottom:16px; }
+
+    /* MAIN CARD */
     .checker-card {
-  width: 100%;
-  max-width: 1100px;
+      width: 100%;
+      max-width: 1100px;
+      margin: 0 auto;              /* center horizontally */
+      background: #f6f5f7;
+      border-radius: 45px;
+      padding: 30px 25px;
+      border: 10px solid #7a40d7;
+      box-shadow: 0 10px 0 rgba(0,0,0,0.06);
+      position: relative;
+      box-sizing: border-box;      /* border included inside width */
+    }
 
-  /* perfect centering for all devices */
-  margin: 5px auto;      /* already centers horizontally */
-  margin-left: auto;     /* EXTRA FIX for mobile */
-  margin-right: auto;    /* EXTRA FIX for mobile */
+    /* 🔥 MOBILE: lock card to viewport width so it can NEVER overflow */
+    @media (max-width: 768px) {
+      .checker-card {
+        width: calc(100vw - 24px);       /* 12px gap left + right */
+        max-width: calc(100vw - 24px);
+      }
+    }
 
-  background: #f6f5f7;
-  border-radius: 45px;
-  padding: 30px 25px;
-  border: 10px solid #7a40d7;
-  box-shadow: 0 10px 0 rgba(0,0,0,0.06);
-  position: relative;
-}
     .checker-title{ text-align:center; font-size:36px; color:#2b0b5a; margin: 6px 0 18px; text-transform:uppercase }
     .input-wrap { position:relative; margin-top:20px; }
     .input-label { display:block; font-weight:700; color:#3b3b3b; margin-bottom:6px }
     .input-row { position:relative; }
     .wallet-input { width:100%; padding:16px 18px; border-radius:12px; border:3px solid #cdb9ff; font-size:18px; box-sizing:border-box }
-    .zilla-head-inline { position:absolute; left:200px; top:-53px; width:120px; z-index:30; pointer-events:none; }
-    .check-btn{ display:inline-block; min-width:300px; padding:14px 22px; border-radius:28px; background:linear-gradient(90deg,#7a40d7,#c95eb7); font-size:20px; font-weight:800; color:#fff; border:3px solid rgba(0,0,0,0.08); box-shadow:0 8px 0 rgba(0,0,0,0.09); cursor:pointer; transition:0.15s }
+
+    .zilla-head-inline { 
+      position:absolute; 
+      left:200px; 
+      top:-53px; 
+      width:120px; 
+      z-index:30; 
+      pointer-events:none; 
+    }
+
+    .check-btn{ 
+      display:inline-block; 
+      min-width:300px; 
+      padding:14px 22px; 
+      border-radius:28px; 
+      background:linear-gradient(90deg,#7a40d7,#c95eb7); 
+      font-size:20px; 
+      font-weight:800; 
+      color:#fff; 
+      border:3px solid rgba(0,0,0,0.08); 
+      box-shadow:0 8px 0 rgba(0,0,0,0.09); 
+      cursor:pointer; 
+      transition:0.15s 
+    }
     .check-btn:hover{ transform:scale(1.04) }
     .check-btn:active{ transform:scale(0.98) }
+
     .result-msg{ margin-top:18px; text-align:center; min-height:48px }
     .result-pill{
       display:inline-block;
@@ -143,6 +155,7 @@ export default function MonzillaWalletChecker() {
       color:white;
       box-shadow:0 4px 10px rgba(0,0,0,0.25);
     }
+
     .bottom-graphics{ position:relative; height:140px; margin-top:22px }
     .baby-left{ position:absolute; left:8px; bottom:0; width:160px }
     .baby-right{ position:absolute; right:8px; bottom:0; width:160px }
@@ -151,19 +164,19 @@ export default function MonzillaWalletChecker() {
   return (
     <>
       <style>{`body { margin:0; padding:0; background:#000; } html, body, #root { height:100%; width:100%; overflow-x:hidden; }`}</style>
-     <div
-  className="mon-container"
-  style={{
-    width: "100%",
-    overflowX: "hidden",
-    minHeight: "100vh",
-    backgroundImage: "url('/bg-monzilla.png')",
-    backgroundRepeat: "no-repeat",
-    backgroundSize: "cover",
-    backgroundPosition: "center center",
-    padding: "36px 18px 60px",
-  }}
->
+      <div
+        className="mon-container"
+        style={{
+          width: "100%",
+          overflowX: "hidden",
+          minHeight: "100vh",
+          backgroundImage: "url('/bg-monzilla.png')",
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "cover",
+          backgroundPosition: "center center",
+          padding: "36px 0 60px",      // 👈 no side padding now
+        }}
+      >
         <style>{css}</style>
 
         <div className="top-socials">
