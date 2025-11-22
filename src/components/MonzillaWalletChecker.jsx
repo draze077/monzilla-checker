@@ -123,7 +123,7 @@ export default function MonzillaWalletChecker() {
       position:absolute; 
       left:190px; 
       top:-46px; 
-      width:108px; 
+      width:107px; 
       z-index:30; 
       pointer-events:none; 
     }
