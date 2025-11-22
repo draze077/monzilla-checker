@@ -7,6 +7,9 @@ export default function MonzillaWalletChecker() {
   const [loading, setLoading] = useState(false);
   const [csvData, setCsvData] = useState({ freemint: {}, gtd: {}, fcfs: {} });
 
+  // ✅ NEW: track when all CSVs are loaded
+  const [csvLoaded, setCsvLoaded] = useState(false);
+
   const parseCsvRows = (rows) => {
     const out = {};
 
@@ -46,20 +49,41 @@ export default function MonzillaWalletChecker() {
       { key: "fcfs", path: "/fcfs.csv" },
     ];
 
-    files.forEach(async ({ key, path }) => {
-      try {
-        const resp = await fetch(path);
-        if (!resp.ok) return;
-        const text = await resp.text();
-        const parsed = Papa.parse(text, { header: true });
-        setCsvData((prev) => ({ ...prev, [key]: parseCsvRows(parsed.data) }));
-      } catch (e) {}
+    // ✅ load all CSVs, no cache, then set once
+    Promise.all(
+      files.map(async ({ key, path }) => {
+        try {
+          const resp = await fetch(`${path}?v=${Date.now()}`, {
+            cache: "no-store",
+          });
+          if (!resp.ok) return { key, data: {} };
+
+          const text = await resp.text();
+          const parsed = Papa.parse(text, { header: true });
+          return { key, data: parseCsvRows(parsed.data) };
+        } catch (e) {
+          return { key, data: {} };
+        }
+      })
+    ).then((results) => {
+      const merged = {};
+      results.forEach((r) => {
+        merged[r.key] = r.data;
+      });
+      setCsvData(merged);
+      setCsvLoaded(true);
     });
   }, []);
 
   const normalize = (s) => (s || "").toString().trim().toLowerCase();
 
   const handleCheck = () => {
+    // ✅ don’t allow check until all CSVs are ready
+    if (!csvLoaded) {
+      setResult("Please wait, data is still loading...");
+      return;
+    }
+
     const w = normalize(wallet);
     if (!w || !w.startsWith("0x")) {
       setResult("Please enter a valid wallet address starting with 0x...");
