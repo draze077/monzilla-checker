@@ -121,12 +121,19 @@ export default function MonzillaWalletChecker() {
 
     .zilla-head-inline { 
       position:absolute; 
-      left:200px; 
-      top:-53px; 
-      width:120px; 
+      left:190px; 
+      top:-46px; 
+      width:108px; 
       z-index:30; 
       pointer-events:none; 
     }
+   @media (min-width: 768px) {
+    .zilla-head-inline {
+    left: 240px;   /* desktop position */
+    top: -60px;    /* desktop position */
+    width: 130px;  /* optional */
+  }
+}
 
     .check-btn{ 
       display:inline-block; 
